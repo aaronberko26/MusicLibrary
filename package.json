@@ -1,0 +1,15 @@
+{
+  "name": "music-library",
+  "version": "1.0.0",
+  "description": "Music Library Application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "CSE412 Group6",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^27.1.0"
+  }
+}

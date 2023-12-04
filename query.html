@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Query</title>
+    <link rel="stylesheet" href="subStyles.css"></link>
+    <style>
+        #resultContainer {
+            width: auto;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="query-container">
+            <label for="enterQuery">Search For a Song:</label>
+            <input type="text" id="customQuery" name="customQuery" placeholder="Enter song name">
+            <button id="execute">Search Song</button>
+        </div>
+        <div id="resultContainer">
+            <label id="result">Result:</label>
+        </div>
+        <button id="return">Return</button>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require("electron");
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const returnButton = document.getElementById('return');
+            const executeButton = document.getElementById('execute');
+            const customQueryInput = document.getElementById('customQuery');
+            const resultLabel = document.getElementById('result');
+
+            returnButton.addEventListener('click', () => {
+                console.log("Return button clicked");
+                ipcRenderer.send("change-file", "index.html");
+            });
+
+            executeButton.addEventListener('click', async () => {
+                const songName = customQueryInput.value;
+                
+                try {
+                    // Make a request to your .NET backend
+                    const response = await fetch(`http://localhost:5059/Song/Song/Index`);
+                    const data = await response.json();
+
+                    // Update the result label with the retrieved data
+                    resultLabel.textContent = `Result: ${JSON.stringify(data)}`;
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                    resultLabel.textContent = 'Error fetching data';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+</html>

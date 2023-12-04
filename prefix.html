@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prefix Query</title>
+  <link rel="stylesheet" href="subStyles.css">
+  <style>
+    #resultContainer {
+        width: auto;
+        height: auto;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="prefix-container">
+      <label for="prefixQuery">Select Prefix Query:</label>
+      <select id="prefixQuery">
+        <option value="INSERT INTO song (artist_id,a_name, name, genre, featured_artists,length)
+        VALUES (1,'For All The Dogs','Amen', 'Rap', 'Teezo Touchdown', '00:03:35');">Inserting a New Song:"For All The Dogs"</option>
+        <option value="DELETE FROM playlist WHERE name = 'Rap Mix';">Deleting the playlist: "Rap Mix"</option>
+        <option value="SELECT s.name AS song_name, s.genre, s.featured_artists, s.length FROM song s JOIN song_playlist sp ON s.name = sp.song_name JOIN playlist p ON sp.playlist_id = p.playlist_id WHERE p.name = 'Playlist3';">
+          Select songs from playlist 3
+        </option>
+        <option value="SELECT * FROM song WHERE genre = 'Pop';">Select pop music</option>
+        <option value="SELECT p.name AS playlist_name, p.number_of_songs, p.p_length FROM playlist p JOIN member m ON p.email = m.email WHERE m.email = 'user1@example.com';">
+          Select playlists from user1
+        </option>
+      </select>
+
+      <button id="execute">Execute</button>
+
+      <div id="resultContainer">
+        <label id="result">Result:</label>
+      </div>
+    </div>
+    <button id="return">Return</button>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require("electron");
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const returnButton = document.getElementById('return');
+      const executeButton = document.getElementById('execute');
+      const prefixQuerySelect = document.getElementById('prefixQuery');
+      const resultContainer = document.getElementById('resultContainer');
+      const resultLabel = document.getElementById('result');
+
+      returnButton.addEventListener('click', () => {
+        console.log("Return button clicked");
+        ipcRenderer.send("change-file", "index.html");
+      });
+
+      executeButton.addEventListener('click', () => {
+        const selectedOption = prefixQuerySelect.options[prefixQuerySelect.selectedIndex];
+        const queryValue = selectedOption.value;
+        resultLabel.textContent = `Result: ${queryValue}`;
+      });
+    });
+  </script>
+</body>
+</html>

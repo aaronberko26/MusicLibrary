@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Albums</title>
+    <link rel="stylesheet" href="subStyles.css">
+    </link>
+    <style>
+        #artistIdContainer {
+            width: auto;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 20px;
+        }
+    </style>
+    <style>
+        #resultContainer {
+            width: auto;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="query-container">
+            <label for="artistName">Enter Artist Name:</label>
+            <input type="text" id="artistName" name="artistName" placeholder="Enter artist name">
+            <button id="Get-Artist-ID">Get Artist ID</button>
+            <label for="artistId">Enter Artist ID:</label>
+            <input type="text" id="artistId" name="artistId" placeholder="Enter artist id">
+            <button id="Get-Album">Get Album</button>
+        </div>
+        <div id="artistIdContainer">
+            <label id="artistIdContainer">Artist ID:</label>
+        </div>
+        <div id="resultContainer">
+            <label id="result">Result:</label>
+        </div>
+        <button id="return">Return</button>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require("electron");
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const returnButton = document.getElementById('return');
+            const artistNameInput = document.getElementById('artistName');
+            const artistIdInput = document.getElementById('artistId');
+            const customQueryInput = document.getElementById('customQuery');
+            const resultLabel = document.getElementById('result');
+            const artistIdLabel = document.getElementById('artistIdContainer');
+            const getAlbumButton = document.getElementById('Get-Album');
+            const getArtistIdButton = document.getElementById('Get-Artist-ID');
+
+            returnButton.addEventListener('click', () => {
+                console.log("Return button clicked");
+                ipcRenderer.send("change-file", "index.html");
+            });
+
+            getArtistIdButton.addEventListener('click', async () => {
+                const artistName = artistNameInput.value
+
+                try {
+                    const response = await fetch(`http://localhost:5059/Artist/Artists/Get-ArtistId/${artistName}`);
+
+                    if (!response.ok) {
+                        console.error(`HTTP error! Status: ${response.status}`);
+                        return;
+                    }
+
+                    const responseText = await response.text();
+                    console.log(responseText);
+
+                    const data = JSON.parse(responseText);
+                    artistIdLabel.textContent = `Artist ID: ${JSON.stringify(data)}`;
+
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+
+            getAlbumButton.addEventListener('click', async () => {
+                const artistName = artistNameInput.value;
+                const artistId = artistIdInput.value;
+
+                try {
+                    const response = await fetch(`http://localhost:5059/Album/Album/Get-Albums/${artistId}`);
+                    if (!response.ok) {
+                        console.error(`HTTP error! Status: ${response.status}`);
+                        return;
+                    }
+
+                    const responseText = await response.text();
+                    console.log(responseText);
+
+                    const data = JSON.parse(responseText);
+                    resultLabel.textContent = `Result: ${JSON.stringify(data)}`;
+
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                    resultLabel.textContent = 'Error fetching data' + error;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -17,7 +17,4 @@ public partial class Song
 
     public int? Length { get; set; }
 
-    public virtual Album ANameNavigation { get; set; } = null!;
-
-    public virtual Artist? Artist { get; set; }
 }

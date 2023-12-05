@@ -57,10 +57,6 @@ public partial class MusicLibraryContext : DbContext
                 .HasColumnName("label");
             entity.Property(e => e.Numofsongs).HasColumnName("numofsongs");
             entity.Property(e => e.Year).HasColumnName("year");
-
-            entity.HasOne(d => d.Artist).WithMany(p => p.Albums)
-                .HasForeignKey(d => d.ArtistId)
-                .HasConstraintName("album_artist_id_fkey");
         });
 
         modelBuilder.Entity<Artist>(entity =>
@@ -150,16 +146,6 @@ public partial class MusicLibraryContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("genre");
             entity.Property(e => e.Length).HasColumnName("length");
-
-            entity.HasOne(d => d.ANameNavigation).WithMany(p => p.Songs)
-                .HasPrincipalKey(p => p.AName)
-                .HasForeignKey(d => d.AName)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("song_a_name_fkey");
-
-            entity.HasOne(d => d.Artist).WithMany(p => p.Songs)
-                .HasForeignKey(d => d.ArtistId)
-                .HasConstraintName("song_artist_id_fkey");
         });
 
         modelBuilder.Entity<SongPlaylist>(entity =>

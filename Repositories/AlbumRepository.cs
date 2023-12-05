@@ -8,13 +8,10 @@ namespace MusicLibrary.Repositories
 {
     public interface IAlbumRepository
     {
-        IEnumerable <Album> GetAll();
-        Album GetAlbum(string albumName);
-        //void AddAlbum(int artistId, string albumName, string label, string albumLength, string albumGenre, int numOfSongs, int year, ICollection<Song> albumSongs, Artist artist);
+        List <Album> GetAll();
+        List <Album> GetAlbum(int artistId);
         void AddAlbum(Album album);
-        void DeleteAlbum(int artistId, string albumName);
-       // void UpdateAlbum(int artistId, string albumName, string label, string albumLength, string albumGenre, int numOfSongs, int year, ICollection<Song> albumSongs, Artist artist);
-        void UpdateAlbum(Album album);    
+        //void DeleteAlbum(int artistId, string albumName);
     }
 
     public class AlbumRepository : IAlbumRepository
@@ -26,64 +23,38 @@ namespace MusicLibrary.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public IEnumerable<Album> GetAll()
+        public List<Album> GetAll()
         {
             return _dbContext.Albums.ToList();
         }
 
-        public Album GetAlbum(string albumName)
+        public List<Album> GetAlbum(int artistId)
         {
-            Album searchedAlbum = _dbContext.Albums.Find(albumName);
+            List<Album> matchingAlbums = _dbContext.Albums.Where(album => album.ArtistId == artistId).ToList();
 
-            if (searchedAlbum != null)
+            if (matchingAlbums.Count > 0)
             {
-                return searchedAlbum;
+                return matchingAlbums;
             }
             else
             {
-                throw new InvalidOperationException("Album not found");
+                throw new InvalidOperationException("No albums found for the specified artistId");
             }
         }
 
-        public Album GetAlbumByArtistAndName(int artistId, string albumName)
+        public void AddAlbum(Album album)
         {
-            Album searchedAlbum = _dbContext.Albums.FirstOrDefault(album => album.AName == albumName);
-
-            if(searchedAlbum != null)
-            {
-                return searchedAlbum;
-            }
-            else
-            {
-                throw new InvalidOperationException("Album not found");
-            }
+            _dbContext.Albums.Add(album);
+            _dbContext.SaveChanges();
         }
 
-
-
-        /*public void UpdateAlbum(int artistId, string albumName, string label, string albumLength, string albumGenre, int numOfSongs, int year, ICollection<Song> albumSongs, Artist artist)
+        /*public void DeleteAlbum(int artistId, string albumName)
         {
-            Album existingAlbum = GetAlbumByArtistAndName(artistId, albumName);
+            Album albumToDelete = GetAlbum(artistId, albumName); 
 
-            if (existingAlbum != null)
+            if(albumToDelete != null)
             {
-                existingAlbum.ArtistId = artistId;
-                existingAlbum.AName = albumName;
-                existingAlbum.Label = label;
-                existingAlbum.ALength = albumLength;
-                existingAlbum.AGenre = albumGenre;
-                existingAlbum.Numofsongs = numOfSongs;
-                existingAlbum.Year = year;
-                existingAlbum.Artist = artist;
-
-                // Update or add songs as needed
-                existingAlbum.Songs.Clear(); // Assuming you want to replace existing songs
-                foreach (var song in albumSongs)
-                {
-                    existingAlbum.Songs.Add(song);
-                }
-
-                // Save changes to the database
+                _dbContext.Albums.Remove(albumToDelete);
                 _dbContext.SaveChanges();
             }
             else
@@ -92,36 +63,9 @@ namespace MusicLibrary.Repositories
             }
         }*/
 
-        public void UpdateAlbum(Album album)
+        public void SaveChanges()
         {
-            _dbContext.Albums.Update(album);
             _dbContext.SaveChanges();
-        }
-
-        /*public void AddAlbum(int artistId, string albumName, string label, string albumLength, string albumGenre, int numOfSongs, int year, ICollection<Song> albumSongs, Artist artist)
-        {
-            Album newAlbum = new Album(artistId, albumName, label, albumLength, albumGenre, numOfSongs, year, albumSongs, artist);
-            _dbContext.Albums.Add(newAlbum);
-        }*/
-
-        public void AddAlbum(Album album)
-        {
-            _dbContext.Albums.Add(album);
-            _dbContext.SaveChanges();
-        }
-
-        public void DeleteAlbum(int artistId, string albumName)
-        {
-            Album albumToDelete = GetAlbumByArtistAndName(artistId, albumName); 
-
-            if(albumToDelete != null)
-            {
-                _dbContext.Albums.Remove(albumToDelete);
-            }
-            else
-            {
-                throw new InvalidOperationException("Album not found");
-            }
         }
     }
 }

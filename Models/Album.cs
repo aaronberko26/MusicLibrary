@@ -5,18 +5,6 @@ namespace MusicLibrary.Models;
 
 public partial class Album
 {
-    /*public Album(int artistId, string albumName, string label, string albumLength, string albumGenre, int numOfSongs, int year, ICollection<Song> albumSongs, Artist artist)
-    {
-        ArtistId = artistId;
-        AName = albumName;
-        Label = label;
-        ALength = albumLength;
-        AGenre = albumGenre;
-        Numofsongs = numOfSongs;
-        Year = year;
-        Songs = albumSongs;
-        Artist = artist;
-    }*/
 
     public int ArtistId { get; set; }
 
@@ -32,7 +20,4 @@ public partial class Album
 
     public int Year { get; set; }
 
-    public virtual Artist Artist { get; set; }
-
-    public virtual ICollection<Song> Songs { get; set; } = new List<Song>();
 }

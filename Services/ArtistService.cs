@@ -7,11 +7,8 @@ namespace MusicLibrary.Services
     {
         IEnumerable<Artist> GetAll();
         Artist GetArtist(int artistId);
-        //void AddArtist(int artistId, string artistName, ICollection<Album> albums, ICollection<Song> songs);
         void AddArtist(Artist artist);
-        void DeleteArtist(int artistId);
-        //void UpdateArtist(int artistId, string artistName, ICollection<Album> albums, ICollection<Song> songs);
-        void UpdateArtist(Artist artist);   
+        int GetArtistIdByName(string name);
     }
     public class ArtistService : IArtistService
     {
@@ -32,29 +29,14 @@ namespace MusicLibrary.Services
             return _artistRepository.GetArtist(artistId);
         }
 
-        /*public void AddArtist(int artistId, string artistName, ICollection<Album> albums, ICollection<Song> songs)
-        {
-            _artistRepository.AddArtist(artistId, artistName, albums, songs);   
-        }*/
-
         public void AddArtist(Artist artist)
         {
             _artistRepository.AddArtist(artist);
         }
 
-        public void DeleteArtist(int artistId)
+        public int GetArtistIdByName(string name)
         {
-            _artistRepository.DeleteArtist(artistId);
-        }
-
-        /*public void UpdateArtist(int artistId, string artistName, ICollection<Album> albums, ICollection<Song> songs)
-        {
-            _artistRepository.UpdateArtist(artistId, artistName, albums, songs);
-        }*/
-
-        public void UpdateArtist(Artist artist)
-        {
-            _artistRepository.UpdateArtist(artist);
+            return _artistRepository.GetArtistIdByName(name);
         }
     }
 }

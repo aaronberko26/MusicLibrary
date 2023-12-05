@@ -12,9 +12,7 @@ namespace MusicLibrary.Repositories
         Artist GetArtist(int artistId);
         //void AddArtist(int artistId, string artistName, ICollection<Album> albums, ICollection<Song> songs);
         void AddArtist(Artist artist);
-        void DeleteArtist(int artistId);
-        //void UpdateArtist(int artistId, string artistName, ICollection<Album> albums, ICollection<Song> songs);
-        void UpdateArtist(Artist artist);
+        int GetArtistIdByName(string name);
     }
     public class ArtistRepository : IArtistRepository
     {
@@ -44,48 +42,20 @@ namespace MusicLibrary.Repositories
             }
         }
 
-       /* public void AddArtist(int artistId, string artistName, ICollection<Album> albums, ICollection<Song> songs)
-        {
-            Artist newArtist = new Artist(artistId, artistName, albums, songs);
-            _dbContext.Artists.Add(newArtist);
-        }*/
-
         public void AddArtist(Artist artist)
         {
             _dbContext.Artists.Add(artist);
             _dbContext.SaveChanges();
         }
 
-        public void DeleteArtist(int artistId)
+        public int GetArtistIdByName(string name)
         {
-            Artist artistToDelete = GetArtist(artistId);
-            if (artistToDelete != null)
-            {
-                _dbContext.Artists.Remove(artistToDelete);
-            }
-            else
-            {
-                throw new InvalidOperationException("Artist not found");
-            }
+            var artist = _dbContext.Artists.FirstOrDefault(a => a.Name == name);
+            return artist.ArtistId;
         }
 
-        /*public void UpdateArtist(int artistId, string artistName, ICollection<Album> albums, ICollection<Song> songs)
+        public void SaveChanges()
         {
-            Artist updatedArtist = GetArtist(artistId);
-
-            if (updatedArtist != null)
-            {
-                updatedArtist.ArtistId = artistId;
-                updatedArtist.Name = artistName;
-                updatedArtist.Albums = albums;
-                updatedArtist.Songs = songs;
-            }
-            else { throw new InvalidOperationException("Artist not found"); }
-        }*/
-
-        public void UpdateArtist(Artist artist)
-        {
-            _dbContext.Update(artist);
             _dbContext.SaveChanges();
         }
     }

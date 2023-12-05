@@ -2,9 +2,8 @@
 using MusicLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Reflection.Emit;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
+
 
 namespace MusicLibrary.Controllers
 {
@@ -40,21 +39,20 @@ namespace MusicLibrary.Controllers
             }
         }
 
-        [HttpPost("Artists/Add-Artist")]
-       /* public ActionResult AddArtist(int artistId, string artistName, ICollection<Album> albums, ICollection<Song> songs)
+        [HttpGet("Artists/Get-ArtistId/{name}")]
+        public ActionResult GetArtistIdByName(string name)
         {
             try
             {
-                _artistService.AddArtist(artistId, artistName, albums, songs);
-                var artist = _artistService.GetArtist(artistId);
-                return View(artist);
-            }
-            catch (InvalidOperationException ex)
+                var artist = _artistService.GetArtistIdByName(name);
+                return Ok(artist);
+            }catch (InvalidOperationException ex)
             {
-                return View("Artist not found" + ex);
+                return BadRequest("Artist not found: " + ex);
             }
-        }*/
+        }
 
+        [HttpPost("Artists/Add-Artist")]
         public ActionResult AddArtist(Artist model)
         {
             try
@@ -62,9 +60,7 @@ namespace MusicLibrary.Controllers
                 var artistEntity = new Artist
                 {
                     ArtistId = model.ArtistId,
-                    Name = model.Name,
-                    Albums = model.Albums,
-                    Songs = model.Songs,
+                    Name = model.Name
                 };
                 _artistService.AddArtist(artistEntity);
                 var artist = _artistService.GetArtist(model.ArtistId);
@@ -73,56 +69,6 @@ namespace MusicLibrary.Controllers
             catch (InvalidOperationException ex)
             {
                 return BadRequest("Artist not added" + ex);
-            }
-        }
-
-        [HttpDelete("Artists/Delete")]
-        public ActionResult DeleteArtist(int artistId)
-        {
-            try
-            {
-                _artistService.DeleteArtist(artistId);
-                return Ok(artistId + " was deleted");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest("Album not found" + ex);
-            }
-        }
-
-        [HttpPut("Artists/Update")]
-        /* public ActionResult UpdateArtist(int artistId, string artistName, ICollection<Album> albums, ICollection<Song> songs)
-         {
-             try
-             {
-                 _artistService.UpdateArtist(artistId, artistName, albums, songs);
-                 var artist = _artistService.GetArtist(artistId);
-                 return View(artist);
-             }
-             catch (InvalidOperationException ex)
-             {
-                 return View("Artist not found" + ex);
-             }
-         }*/
-
-        public ActionResult UpdateArtist(Artist model)
-        {
-            try
-            {
-                var artistEntity = new Artist
-                {
-                    ArtistId = model.ArtistId,
-                    Name = model.Name,
-                    Albums = model.Albums,
-                    Songs = model.Songs,
-                };
-                _artistService.UpdateArtist(artistEntity);
-                var artist = _artistService.GetArtist(model.ArtistId);
-                return Ok(artist);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest("Artist not updated" + ex);
             }
         }
     }

@@ -17,11 +17,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAlbumService, AlbumService>();
 builder.Services.AddScoped<IArtistService, ArtistService>();
+builder.Services.AddScoped<ISongService, SongService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
-
+builder.Services.AddScoped<ISongRepository, SongRepository>();
 
 builder.Services.AddSwaggerGen(c =>
 {
